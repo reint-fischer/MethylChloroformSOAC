@@ -31,14 +31,21 @@ MW=133.4 #Molar Weight: Choose 'CH3CCl3: 133.4 gr/mole' or 'CFC-11: 137.37 gr/mo
 time=np.arange(startyear, startyear+len(P), 1)
 dt=1
 
+#Observations
+t = np.arange(1994,2018,1) #define timerange of observations
+
+for i in t:
+    SH_df = pd.read_csv('AGAGE_CH3CCl3/CGO-gcmd_{0}.csv'.format[str(i)])
 
 #some plots   
 plt.figure(figsize=[10,5])
+plt.title('Two box model NH and SH')
 plt.plot(time, twoboxeulerfw(k,ke,P,C0N,C0S,dt,MW)[0])
 plt.plot(time, twoboxeulerfw(k,ke,P,C0N,C0S,dt,MW)[1])
 plt.show()
 
 plt.figure(figsize=[10,5])
+plt.title('Euler and RK4 comparison')
 plt.plot(time, oneboxeulerfw(k,P,C0,dt,MW))
 plt.plot(time, oneboxRK4(k,P,C0,dt,MW))
 plt.show()
