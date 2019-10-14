@@ -33,5 +33,3 @@ def oneboxRK4(k,P,C0,dt,MW):
         k4 = (Pv[n+1]-k*(C[n]+k3))*dt
         C[n+1] = C[n]+1/6*(k1+2*k2+2*k3+k4)
     return C
-
-mwmc = 133.40 #g/mol
