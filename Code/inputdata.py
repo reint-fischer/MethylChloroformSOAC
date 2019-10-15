@@ -15,13 +15,14 @@ from twoboxmodel import twoboxeulerfw
 
 P_WMO2014_df=pd.read_excel('emissions_2014.xlsx')
 P_WMO2018_df=pd.read_excel('agage_emissions.xlsx')
-substance_df = pd.DataFrame({'CH3CCl3 (Gg/yr)': [1/5, 133.4], 'CFC-11 (Gg/yr)': [1/52, 137.37]})
+substance_df = pd.DataFrame({'CH3CCl3': [1/5, 133.4,'.3'], 'CFC-11': [1/52, 137.37,''], 'CFC-12': [1/100, 120.91,'.1']})
 
-substance='CH3CCl3 (Gg/yr)'#choose 'CH3CCl3 (Gg/yr)', 'CFC-11 (Gg/yr)' or 'CFC-12 (Gg/yr)'
+substance='CH3CCl3'#choose 'CH3CCl3', 'CFC-11' or 'CFC-12'
+substanceunits = substance+' (Gg/yr)'
 
-P_WMO2014=P_WMO2014_df[substance] #select data from dataframe
+P_WMO2014=P_WMO2014_df[substanceunits] #select data from dataframe
 P_WMO2014=P_WMO2014.to_numpy()/1000 #emissions in MT/year
-P_WMO2018=P_WMO2018_df[substance] #select data from dataframe
+P_WMO2018=P_WMO2018_df[substanceunits] #select data from dataframe
 P_WMO2018=P_WMO2018.to_numpy() #emissions in MT/year
 P_data=np.concatenate((P_WMO2014[:29],P_WMO2018[1:])) #create one emissions dataset from 1950 to 2016
 
@@ -50,54 +51,70 @@ timebar=np.insert(np.concatenate((P_WMO2014_df['time'].to_numpy()[:28],P_WMO2018
 #Observations
 O_df = pd.read_csv('AGAGE_CH3CCl3/global_mean_md.txt',header=14,delim_whitespace=True)
 
-
 #BOTH HEMISPHERES
 plt.figure(figsize=[15,10])
-plt.plot(time, twoboxeulerfw(k,ke,P_constant,C0N,C0S,dt,MW)[0])
-plt.plot(time, twoboxeulerfw(k,ke,P_constant,C0N,C0S,dt,MW)[1])
+plt.plot(time, twoboxeulerfw(k,ke,P_constant,C0N,C0S,dt,MW)[0],label='NH')
+plt.plot(time, twoboxeulerfw(k,ke,P_constant,C0N,C0S,dt,MW)[1],label='SH')
 plt.ticklabel_format(axis='y', scilimits=(-12,-12))
+plt.ylabel(substance+' concentration [ppt]')
+plt.xlabel('year')
+plt.legend()
 plt.show()
 
 #some plots   
 plt.figure(figsize=[15,10])
-plt.plot(time, twoboxeulerfw(k,ke,P_constant,C0N,C0S,dt,MW)[0], color='black')
-plt.plot(time, twoboxeulerfw(k,ke,P_constant,C0N,C0S,dt,MW)[1], color='black')
-plt.plot(time, twoboxeulerfw(1,ke,P_constant,C0N,C0S,dt,MW)[0], 'b')
-plt.plot(time, twoboxeulerfw(1,ke,P_constant,C0N,C0S,dt,MW)[1],'b')
-plt.plot(time, twoboxeulerfw(1/2,ke,P_constant,C0N,C0S,dt,MW)[0], 'r')
-plt.plot(time, twoboxeulerfw(1/2,ke,P_constant,C0N,C0S,dt,MW)[1], 'r')
-plt.plot(time, twoboxeulerfw(1/10,ke,P_constant,C0N,C0S,dt,MW)[0], 'c')
-plt.plot(time, twoboxeulerfw(1/10,ke,P_constant,C0N,C0S,dt,MW)[1], 'c')
+plt.plot(time, twoboxeulerfw(1/2*k,ke,P_constant,C0N,C0S,dt,MW)[0], 'b',label='NH k = {0:.2f}'.format(1/2*k))
+plt.plot(time, twoboxeulerfw(1/2*k,ke,P_constant,C0N,C0S,dt,MW)[1],'b',label='SH k = {0:.2f}'.format(1/2*k))
+plt.plot(time, twoboxeulerfw(k,ke,P_constant,C0N,C0S,dt,MW)[0], color='black',label='NH k = {0:.2f}'.format(k))
+plt.plot(time, twoboxeulerfw(k,ke,P_constant,C0N,C0S,dt,MW)[1], color='black',label='SH k = {0:.2f}'.format(k))
+plt.plot(time, twoboxeulerfw(2*k,ke,P_constant,C0N,C0S,dt,MW)[0], 'r',label='NH k = {0:.2f}'.format(2*k))
+plt.plot(time, twoboxeulerfw(2*k,ke,P_constant,C0N,C0S,dt,MW)[1], 'r',label='SH k = {0:.2f}'.format(2*k))
+plt.plot(time, twoboxeulerfw(4*k,ke,P_constant,C0N,C0S,dt,MW)[0], 'c',label='NH k = {0:.2f}'.format(4*k))
+plt.plot(time, twoboxeulerfw(4*k,ke,P_constant,C0N,C0S,dt,MW)[1], 'c',label='SH k = {0:.2f}'.format(4*k))
 plt.ticklabel_format(axis='y', scilimits=(-12,-12))
+plt.ylabel(substance+' concentration [ppt]')
+plt.xlabel('year')
+plt.legend()
 plt.show()
 
 
 
 
 #ERRORBARS:
-Errormax=(P_WMO2018_df[substance]+P_WMO2018_df['Uncertainties ' + substance]).to_numpy()
+Errormax=(P_WMO2018_df[substanceunits]+P_WMO2018_df['Uncertainties ' + substanceunits]).to_numpy()
 Errormax=np.concatenate((P_WMO2014[:29],Errormax[1:]))
-Errormin=(P_WMO2018_df[substance]-P_WMO2018_df['Uncertainties ' + substance]).to_numpy()
+Errormin=(P_WMO2018_df[substanceunits]-P_WMO2018_df['Uncertainties ' + substanceunits]).to_numpy()
 Errormin=np.concatenate((P_WMO2014[:29],Errormin[1:]))
 Errormax=oneboxRK4(k,Errormax,C0,dt,MW)
 Errormin=oneboxRK4(k,Errormin,C0,dt,MW)
 
+ObsErrormax = O_df[substance]+O_df['---'+substance_df.iloc[2][substance]]
+ObsErrormin = O_df[substance]-O_df['---'+substance_df.iloc[2][substance]]
+
 #RK and observations comparison
 plt.figure(figsize=[15,10])
 plt.title('RK4 and observations comparison')
-plt.plot(timebar, oneboxRK4(k,P,C0,dt,MW))
+plt.plot(timebar, oneboxRK4(k,P,C0,dt,MW),label='RK4 model')
 plt.fill_between(timebar, Errormax, Errormin, alpha=0.2)
-plt.plot(O_df['time'],O_df['CFC-11']/(10**9))
+plt.plot(O_df['time'],O_df[substance]/(10**9),label='AGAGE observations')
+plt.fill_between(O_df['time'],ObsErrormax/(10**9),ObsErrormin/(10**9),alpha=0.4)
+plt.ticklabel_format(axis='y', scilimits=(-9,-9))
+plt.ylabel(substance+' concentration [ppb]')
+plt.xlabel('year')
+plt.legend()
 plt.show()
 
 
 #Euler and RK4 comparison
 plt.figure(figsize=[15,10])
 plt.title('Euler and RK4 comparison')
-plt.plot(timebar, oneboxeulerfw(k,P,C0,dt,MW))
-plt.plot(timebar, oneboxRK4(k,P,C0,dt,MW))
-plt.plot(O_df['time'],O_df['CFC-11']/(10**9))
-
+plt.plot(timebar, oneboxeulerfw(k,P,C0,dt,MW),label='Euler model')
+plt.plot(timebar, oneboxRK4(k,P,C0,dt,MW),label='RK4 model')
+plt.plot(O_df['time'],O_df[substance]/(10**9),label='AGAGE observations')
+plt.ticklabel_format(axis='y', scilimits=(-9,-9))
+plt.ylabel(substance+' concentration [ppb]')
+plt.xlabel('year')
+plt.legend()
 plt.show()
 
 
