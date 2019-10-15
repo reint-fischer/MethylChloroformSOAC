@@ -30,6 +30,7 @@ P_constant=np.array([0.5]*18) #constant emissions in MT/year
 #P_constant[5:18]=0 #turning emmisions of at 1977
 time=np.arange(1972, 1972+len(P_constant), 1)
 
+
 #inputvariables boxmodels (k,ke,P,C0,C0N,C0S,dt,MW)
 k=substance_df.iloc[0][substance] #reaction constants: '1/5' or '1/52'
 ke=0.5 # interhemispheric exchange constant
@@ -37,11 +38,13 @@ P=P_data #emissions data: choose 'P_constant' or 'P_data'
 C0=20*10**-12 #start concentration onebox model (ppv)
 C0N=30*10**-12 #NH start concentration twobox model (ppv)
 C0S=10*10**-12 #SH start concentration twobox model (ppv)
+
 MW=substance_df.iloc[1][substance] #Molar Weight: 'CH3CCl3: 133.4 gr/mole' or 'CFC-11: 137.37 gr/mole'
 dt=1 #timestep (years)
 
 #time array
 timebar=np.insert(np.concatenate((P_WMO2014_df['time'].to_numpy()[:28],P_WMO2018_df['time'].to_numpy()[1:])), 0, 1949)
+
 
 
 #Observations
@@ -94,6 +97,7 @@ plt.title('Euler and RK4 comparison')
 plt.plot(timebar, oneboxeulerfw(k,P,C0,dt,MW))
 plt.plot(timebar, oneboxRK4(k,P,C0,dt,MW))
 plt.plot(O_df['time'],O_df['CFC-11']/(10**9))
+
 plt.show()
 
 
