@@ -17,7 +17,7 @@ P_WMO2014_df=pd.read_excel('emissions_2014.xlsx')
 P_WMO2018_df=pd.read_excel('agage_emissions.xlsx')
 substance_df = pd.DataFrame({'CH3CCl3': [1/5, 133.4,'.3'], 'CFC-11': [1/52, 137.37,''], 'CFC-12': [1/100, 120.91,'.1']})
 
-substance='CH3CCl3'#choose 'CH3CCl3', 'CFC-11' or 'CFC-12'
+substance='CFC-11'#choose 'CH3CCl3', 'CFC-11' or 'CFC-12'
 substanceunits = substance+' (Gg/yr)'
 
 P_WMO2014=P_WMO2014_df[substanceunits] #select data from dataframe
@@ -56,7 +56,7 @@ ObsErrormin = O_df[substance]-O_df['---'+substance_df.iloc[2][substance]]
 
 #RK and observations comparison
 plt.figure(figsize=[15,10])
-plt.title('RK4 and observations comparison')
+plt.title(substance+' RK4 and observations comparison')
 plt.plot(timebar, oneboxRK4(k,P,C0,dt,MW),label='RK4 model')
 plt.fill_between(timebar, Errormax, Errormin, alpha=0.2)
 plt.plot(O_df['time'],O_df[substance]/(10**9),label='AGAGE observations')
@@ -70,7 +70,7 @@ plt.show()
 
 #Euler and RK4 comparison
 plt.figure(figsize=[15,10])
-plt.title('Euler and RK4 comparison')
+plt.title(substance+' Euler and RK4 comparison')
 plt.plot(timebar, oneboxeulerfw(k,P,C0,dt,MW),label='Euler model')
 plt.plot(timebar, oneboxRK4(k,P,C0,dt,MW),label='RK4 model')
 plt.plot(O_df['time'],O_df[substance]/(10**9),label='AGAGE observations')
