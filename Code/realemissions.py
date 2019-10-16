@@ -80,7 +80,13 @@ plt.xlabel('year')
 plt.legend()
 plt.show()
 
-
+#Emissions
+plt.figure(figsize=[15,10])
+plt.title(substance+' emissions')
+plt.plot(timebar, P)
+plt.ylabel(substance+' emissions [Mt/yr]')
+plt.xlabel('year')
+plt.show()
 
 
 
