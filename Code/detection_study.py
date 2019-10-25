@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-em_cfc_11=pd.read_excel('em_cfc_11.xls')
+em_cfc_11=pd.read_excel('Data/em_cfc_11.xls')
 
 
 plt.figure(figsize=[15,10])
