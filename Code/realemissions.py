@@ -14,8 +14,8 @@ from oneboxmodel import oneboxeulerfw, oneboxRK4
 from twoboxmodel import twoboxeulerfw
 from inversemodel import inverseonebox
 
-P_WMO2014_df=pd.read_excel('emissions_2014.xlsx')
-P_WMO2018_df=pd.read_excel('agage_emissions.xlsx')
+P_WMO2014_df=pd.read_excel('Data/emissions_2014.xlsx')
+P_WMO2018_df=pd.read_excel('Data/agage_emissions.xlsx')
 substance_df = pd.DataFrame({'CH3CCl3': [1/5, 133.4,'.3'], 'CFC-11': [1/52, 137.37,''], 'CFC-12': [1/100, 120.91,'.1']})
 
 substance='CFC-11'#choose 'CH3CCl3', 'CFC-11' or 'CFC-12'
@@ -42,7 +42,7 @@ dt=1 #timestep (years)
 timebar=np.insert(np.concatenate((P_WMO2014_df['time'].to_numpy()[:28],P_WMO2018_df['time'].to_numpy()[1:])), 0, 1949)
 
 #Observations
-O_df = pd.read_csv('AGAGE_CH3CCl3/global_mean_md.txt',header=14,delim_whitespace=True)
+O_df = pd.read_csv('Data/global_mean_md.txt',header=14,delim_whitespace=True)
 
 #ERRORBARS:
 Errormax=(P_WMO2018_df[substanceunits]+P_WMO2018_df['Uncertainties ' + substanceunits]).to_numpy()/1000
