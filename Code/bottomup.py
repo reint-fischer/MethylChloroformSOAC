@@ -24,9 +24,9 @@ rClosed = 0.080 #Closed Foams Banks
 rOpen = 0.980 #Open Foams and Emissive Uses Banks
 
 ### Cumulative sales ###
-RAC = AFEAS_df['S_nonhermetic_cum'].to_numpy()+AFEAS_df['S_hermetic'].to_numpy()
-Closed = AFEAS_df['S_closed'].to_numpy()
-Open = AFEAS_df['S_open'].to_numpy()
+RAC = np.copy(AFEAS_df['S_nonhermetic_cum'].to_numpy()+AFEAS_df['S_hermetic'].to_numpy())
+Closed = np.copy(AFEAS_df['S_closed'].to_numpy())
+Open = np.copy(AFEAS_df['S_open'].to_numpy())
 
 ### Production and Distribution Emissions ###
 ERAC1 = [RAC[0]*rPnD]
