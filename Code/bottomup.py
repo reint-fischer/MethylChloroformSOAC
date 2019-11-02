@@ -12,7 +12,13 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-AFEAS_df = pd.read_excel('Data/em_cfc_11.xls')
+cummulatief_df = pd.read_excel('Data/Cummulative_emissions.xls')
+cum_df=cummulatief_df
+
+
+
+
+
 
 ### Emission rates ###
 rPnD = 0.015 #Production & Distribution
@@ -24,9 +30,9 @@ rClosed = 0.080 #Closed Foams Banks
 rOpen = 0.980 #Open Foams and Emissive Uses Banks
 
 ### Cumulative sales ###
-RAC = AFEAS_df['S_nonhermetic_cum'].to_numpy()+AFEAS_df['S_hermetic'].to_numpy()
-Closed = AFEAS_df['S_closed'].to_numpy()
-Open = AFEAS_df['S_open'].to_numpy()
+RAC = np.copy(cum_df['R/AC_cum'].to_numpy())
+Closed = np.copy(cum_df['Closed_cum'].to_numpy())
+Open = np.copy(cum_df['Open_cum'].to_numpy())
 
 ### Production and Distribution Emissions ###
 ERAC1 = [RAC[0]*rPnD]
@@ -70,25 +76,32 @@ for i in range(len(RAC)):
         RAC[i+1] = RAC[i+1] - sum(ERAC3[:i+1])
         Closed[i+1] = Closed[i+1] - sum(EClosed3[:i+1])
         Open[i+1] = Open[i+1] - sum(EOpen3[:i+1])
-#    else:
-#        RAC =np.append(RAC,RAC[i]-ERAC3[i])
-#        Closed = np.append(Closed,Closed[i]-EClosed3[i])
-#        Open = np.append(Open,Open[i]-EOpen3[i])
 #%%
 ### Total Emissions ###
 colors = [(0.1,0.6,0.1,0.3),(0.1,0.6,0.1,0.6),(0.1,0.6,0.1,0.95),(0.5,0.1,0.5,0.3),(0.5,0.1,0.5,0.6),(0.5,0.1,0.5,0.95),(0.9,0.5,0.02,0.3),(0.9,0.5,0.02,0.6),(0.9,0.5,0.02,0.95)]
-labels = ['RAC production','RAC installation','RAC bank','Closed foam production','Closed foam installation','Closed foam bank','Open foam production','Open foam installation','Open foam bank']
-f1 = plt.figure(1)
+labels = ['R/AC production','R/AC installation','R/AC bank','Closed foam production','Closed foam installation','Closed foam bank','Open foam production','Open foam installation','Open foam bank']
+f1 = plt.figure(1,figsize=[15,10])
 ax1 = plt.axes()
-ax1.stackplot(AFEAS_df['year'],ERAC1,ERAC2,ERAC3,EClosed1,EClosed2,EClosed3,EOpen1,EOpen2,EOpen3,labels=labels,colors=colors)
+ax1.stackplot(cum_df['year'],ERAC1,ERAC2,ERAC3,EClosed1,EClosed2,EClosed3,EOpen1,EOpen2,EOpen3,labels=labels,colors=colors)
 plt.legend(loc='upper left')
-plt.title('CFC-11 Emissions per sector')
-plt.ylabel('Emissions [ktonnes/year]')
+plt.title('CFC-11 bottem-up Emissions per sector', fontsize=20)
+plt.ylabel('Emissions [ktonnes/year]', fontsize=20)
+plt.xlabel('Year', fontsize=20)
+plt.tick_params(labelsize=15)
+plt.legend(fontsize=12)
+plt.grid(axis='y',alpha=.3)
+plt.savefig('Figures/Bottemup_emissions.png')
+plt.show()
 
-f2 = plt.figure(2)
+f2 = plt.figure(2,figsize=[15,10])
 ax2 = plt.axes()
-ax2.stackplot(AFEAS_df['year'],RAC,Closed,Open,colors = colors[2::3],labels = labels[2::3])
+ax2.stackplot(cum_df['year'],RAC,Closed,Open,colors = colors[2::3],labels = labels[2::3])
 plt.legend(loc='upper left')
-plt.title('CFC-11 Banks per sector')
-plt.ylabel('Bank size [ktonnes]')
-plt.xlabel('Year')
+plt.title('CFC-11 bottem-up Banks per sector', fontsize=20)
+plt.ylabel('Bank size [ktonnes]', fontsize=20)
+plt.xlabel('Year', fontsize=20)
+plt.tick_params(labelsize=15)
+plt.legend(fontsize=12)
+plt.grid(axis='y',alpha=.3)
+plt.savefig('Figures/Bottemup_banksize.png')
+plt.show()
