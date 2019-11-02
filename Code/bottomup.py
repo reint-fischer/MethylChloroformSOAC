@@ -18,8 +18,6 @@ cum_df=cummulatief_df
 
 
 
-
-
 ### Emission rates ###
 rPnD = 0.015 #Production & Distribution
 riRAC = 0.050 #Refrigeration and Air Conditioning Installation
@@ -30,9 +28,11 @@ rClosed = 0.080 #Closed Foams Banks
 rOpen = 0.980 #Open Foams and Emissive Uses Banks
 
 ### Cumulative sales ###
+
 RAC = np.copy(cum_df['R/AC_cum'].to_numpy())
 Closed = np.copy(cum_df['Closed_cum'].to_numpy())
 Open = np.copy(cum_df['Open_cum'].to_numpy())
+
 
 ### Production and Distribution Emissions ###
 ERAC1 = [RAC[0]*rPnD]
