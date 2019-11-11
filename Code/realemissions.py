@@ -73,9 +73,9 @@ plt.fill_between(O_df['time'],ObsErrormax,ObsErrormin,alpha=0.3 ,color='C1')
 plt.ylabel(substance+' concentration [ppt]', fontsize=20)
 plt.xlabel('year', fontsize=20)
 plt.tick_params(labelsize=15)
-plt.legend(fontsize=16)
+plt.legend(fontsize=12)
 plt.grid(axis='y',alpha=.3)
-#plt.savefig('Figures/Concentration__RK4_and_observations_comparison.png')
+plt.savefig('Figures/Concentration__RK4_and_observations_comparison.png')
 plt.show()
 
 
@@ -88,12 +88,10 @@ plt.plot(O_df['time'],O_df[substance],label='AGAGE observations', color='C1')
 plt.ylabel(substance+' concentration [ppt]', fontsize=20)
 plt.xlabel('year', fontsize=20)
 plt.tick_params(labelsize=15)
-plt.legend(fontsize=16)
+plt.legend(fontsize=12)
 plt.grid(axis='y',alpha=.3)
-#plt.savefig('Figures/Concentration__Euler_and_RK4_comparison.png')
+plt.savefig('Figures/Concentration__Euler_and_RK4_comparison.png')
 plt.show()
-
-
 
 # Convert monthly derived emissions from AGAGE data into yearly emissions
 P_monthly=inverseonebox(k,O_df[substance]/(10**12),dt/12,MW)*1000
@@ -121,14 +119,14 @@ pd.DataFrame(data={'P_yearly': P_yearly, 'P_ymax': P_ymax, 'P_ymin': P_ymin, 'ye
 
 #Emissions WMO vs. one-box model
 plt.figure(figsize=[15,10])
-#plt.title(substance+' emissions: Inverse model comparison', fontsize=20)
+plt.title(substance+' emissions: Inverse model comparison', fontsize=20)
 plt.plot(timebar, P*1000, label='WMO emissions')
 plt.plot(np.linspace(1978,2017,40),P_yearly,label='Inverse onebox model',color='C1')
 plt.fill_between(np.linspace(1978,2017,40),P_ymin,P_ymax,alpha=0.2,color='C1',label='Lifetime uncertainties')
 plt.ylabel(substance+' emissions [kt/yr]', fontsize=20)
 plt.xlabel('year', fontsize=20)
 plt.tick_params(labelsize=15)
-plt.legend(fontsize=16)
+plt.legend(fontsize=12)
 plt.grid(axis='y',alpha=.3)
-#plt.savefig('Figures/Emissions__Inverse_model_comparison.png')
+plt.savefig('Figures/Emissions__Inverse_model_comparison.png')
 plt.show()
