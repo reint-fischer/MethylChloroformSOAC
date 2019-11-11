@@ -56,7 +56,6 @@ def bottumup(rRAC, rClosed, rOpen, Extra):
         Closed[71:] = Closed[71:]+np.cumsum([35]*len(Closed[71:]))
         Closed[79:] = Closed[79:]+np.cumsum([35]*len(Closed[79:]))
     
-    
     ### Production and Distribution Emissions ###
     ERAC1 = [RAC[0]*rPnD]
     EClosed1 = [Closed[0]*rPnD]
@@ -136,7 +135,7 @@ plt.plot(Comb_Em_df['year'],path2, label='Sensitivity - High', color='C3')
 plt.plot(Comb_Em_df['year'],path3, label='Sensitivity - Low', color='C0')
 plt.plot(np.linspace(1978,2017,40),Inv_em_df['P_yearly'],label='Inverse onebox model', color='C1')
 plt.fill_between(np.linspace(1978,2017,40),Inv_em_df['P_ymin'],Inv_em_df['P_ymax'],alpha=0.3,color='C1',label='Lifetime uncertainties')
-plt.ylabel('CFC-11 emissions [Mt/yr]', fontsize=15)
+plt.ylabel('CFC-11 emissions [ktonnes/year]', fontsize=15)
 plt.xlabel('year', fontsize=15)
 plt.tick_params(labelsize=15)
 plt.grid(axis='y',alpha=.3)
@@ -146,13 +145,13 @@ plt.show()
 
 #Emission comparison WMO, AFEAS, bottomup, Inverse
 plt.figure(figsize=[15,10])
-plt.title('Bottom-up CFC-11 emissions: Bottem-up vs Top-down', fontsize=20)
+plt.title('Bottom-up CFC-11 emissions: Bottom-up vs Top-down', fontsize=20)
 plt.plot(timebar, P_WMO_data*1000, label='Top-down: WMO emissions')
 plt.plot(np.linspace(1978,2017,40),Inv_em_df['P_yearly'],label='Top-down: Inverse onebox model', color='C1')
 plt.plot(Comb_Em_df['year'],path1, label='Bottem-up: most likely', color='C2')
 plt.plot(AFEAS_df['year'], AFEAS_df['R_annual'], label='Bottem-up: AFEAS', color='C3')
 plt.fill_between(np.linspace(1978,2017,40),Inv_em_df['P_ymin'],Inv_em_df['P_ymax'],alpha=0.3,color='C1',label='Lifetime uncertainties')
-plt.ylabel('CFC-11 emissions [Mt/yr]', fontsize=15)
+plt.ylabel('CFC-11 emissions [ktonnes/year]', fontsize=15)
 plt.xlabel('year', fontsize=15)
 plt.tick_params(labelsize=15)
 plt.grid(axis='y',alpha=.3)
@@ -167,16 +166,16 @@ extra_f[8:]=extra_f[8:]+35
 
 plt.figure(figsize=[15,10])
 plt.title('Increased Closed-Cell Foam Production', fontsize=20)
-plt.plot(Comb_Em_df['year'],extra_foam, label='Bottem-up: most likely', color='C2')
+plt.plot(Comb_Em_df['year'],extra_foam, label='Bottom-up: most likely', color='C2')
 plt.plot(np.linspace(1978,2017,40),Inv_em_df['P_yearly'],label='Inverse onebox model', color='C1')
 plt.fill_between(np.linspace(1978,2017,40),Inv_em_df['P_ymin'],Inv_em_df['P_ymax'],alpha=0.3,color='C1',label='Lifetime uncertainties')
 plt.bar(np.linspace(2002,2017,15), extra_f , width=1,alpha=0.3,color='C3',label='Extra Production Closed Foam')
-plt.ylabel('CFC-11 emissions [Mt/yr]', fontsize=15)
+plt.ylabel('CFC-11 emissions [ktonnes/year]', fontsize=15)
 plt.xlabel('year', fontsize=15)
 plt.tick_params(labelsize=15)
 plt.grid(axis='y',alpha=.3)
 plt.legend(fontsize=12)
-plt.savefig('Figures/Increased_Closed_Cell_Foam_Production.png')
+#plt.savefig('Figures/Increased_Closed_Cell_Foam_Production.png')
 plt.show()
 
 
