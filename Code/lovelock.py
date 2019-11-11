@@ -13,7 +13,6 @@ from oneboxmodel import oneboxeulerfw, oneboxRK4
 from twoboxmodel import twoboxeulerfw
 from matplotlib.ticker import MaxNLocator,ScalarFormatter
 
-
 substance_df = pd.DataFrame({'CH3CCl3': [1/5, 133.4,'.3'], 'CFC-11': [1/52, 137.37,''], 'CFC-12': [1/100, 120.91,'.1']})
 substance='CH3CCl3'#choose 'CH3CCl3', 'CFC-11' or 'CFC-12'
 substanceunits = substance+' (Gg/yr)'
@@ -35,7 +34,7 @@ C0S=10*10**-12 #SH start concentration twobox model (ppv)
 MW=substance_df.iloc[1][substance] #Molar Weight: 'CH3CCl3: 133.4 gr/mole' or 'CFC-11: 137.37 gr/mole'
 dt=1 #timestep (years)
 
-
+#onebox plot
 plt.figure(figsize=[15,10])
 #plt.title(substance+' concentration: Euler and RK4 comparison', fontsize=20)
 plt.plot(time, oneboxeulerfw(k,P_constant,C0,dt,MW)*(10**12),label='Euler', color='C1')
@@ -99,11 +98,10 @@ plt.plot(timestop, twoboxeulerfw(k,ke,P_stop,C0N,C0S,dt,MW)[0]*(10**12),label='N
 plt.plot(timestop, twoboxeulerfw(k,ke,P_stop,C0N,C0S,dt,MW)[1]*(10**12),label='SH')
 ax = plt.gca()
 ax.xaxis.set_major_locator(MaxNLocator(integer=True))
-#plt.ticklabel_format(axis='y', scilimits=(-12,-12))
 plt.ylabel(substance+' concentration [ppt]', fontsize=20)
 plt.xlabel('year', fontsize=20)
 plt.tick_params(labelsize=15)
 plt.grid(axis='y',alpha=.3)
 plt.legend(fontsize=16)
-plt.savefig('Figures/Lovelock_concentration_twoboxmodel_ceased_emissions.png')
+#plt.savefig('Figures/Lovelock_concentration_twoboxmodel_ceased_emissions.png')
 plt.show()
