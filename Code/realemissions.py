@@ -56,46 +56,46 @@ ObsErrormax = O_df[substance]+O_df['---'+substance_df.iloc[2][substance]]
 ObsErrormin = O_df[substance]-O_df['---'+substance_df.iloc[2][substance]]
 
 #Inverse ERRORBARS
-Invmax = inverseonebox(1/67,O_df[substance]/(10**12),dt/12,MW)
-Invmin = inverseonebox(1/43,O_df[substance]/(10**12),dt/12,MW)
+Invmax = inverseonebox(1/67,O_df[substance]/(10**12),dt/12,MW)*1000
+Invmin = inverseonebox(1/43,O_df[substance]/(10**12),dt/12,MW)*1000
 
 
 #RK and observations comparison
 plt.figure(figsize=[15,10])
-plt.title(substance+' concentration: RK4 and observations comparison', fontsize=20)
-plt.plot(timebar, oneboxRK4(k,P,C0,dt,MW)*1.06,label='RK4 model', color='C0')
-plt.fill_between(timebar, Errormax, Errormin, alpha=0.2,label='Uncertainty range')
-plt.plot(O_df['time'],O_df[substance]/(10**12),label='AGAGE observations',color='C1')
-plt.fill_between(O_df['time'],ObsErrormax/(10**12),ObsErrormin/(10**12),alpha=0.3 ,color='C1')
-plt.ticklabel_format(axis='y', scilimits=(-12,-12))
+#plt.title(substance+' concentration: RK4 and observations comparison', fontsize=20)
+plt.plot(timebar, oneboxRK4(k,P,C0,dt,MW)*1.06*(10**12),label='RK4 model', color='C0')
+plt.fill_between(timebar, Errormax*(10**12), Errormin*(10**12), alpha=0.2,label='Uncertainty range')
+plt.plot(O_df['time'],O_df[substance],label='AGAGE observations',color='C1')
+plt.fill_between(O_df['time'],ObsErrormax,ObsErrormin,alpha=0.3 ,color='C1')
+#plt.ticklabel_format(axis='y', scilimits=(-12,-12))
 plt.ylabel(substance+' concentration [ppt]', fontsize=20)
 plt.xlabel('year', fontsize=20)
 plt.tick_params(labelsize=15)
-plt.legend(fontsize=12)
+plt.legend(fontsize=16)
 plt.grid(axis='y',alpha=.3)
-plt.savefig('Figures/Concentration__RK4_and_observations_comparison.png')
+#plt.savefig('Figures/Concentration__RK4_and_observations_comparison.png')
 plt.show()
 
 
 #Euler and RK4 comparison
 plt.figure(figsize=[15,10])
-plt.title(substance+' concentration: Euler and RK4 comparison', fontsize=20)
-plt.plot(timebar, oneboxeulerfw(k,P,C0,dt,MW)*1.06,label='Euler model', color='C3')
-plt.plot(timebar, oneboxRK4(k,P,C0,dt,MW)*1.06,label='RK4 model', color='C0')
-plt.plot(O_df['time'],O_df[substance]/(10**12),label='AGAGE observations', color='C1')
-plt.ticklabel_format(axis='y', scilimits=(-12,-12))
+#plt.title(substance+' concentration: Euler and RK4 comparison', fontsize=20)
+plt.plot(timebar, oneboxeulerfw(k,P,C0,dt,MW)*1.06*(10**12),label='Euler model', color='C3')
+plt.plot(timebar, oneboxRK4(k,P,C0,dt,MW)*1.06*(10**12),label='RK4 model', color='C0')
+plt.plot(O_df['time'],O_df[substance],label='AGAGE observations', color='C1')
+#plt.ticklabel_format(axis='y', scilimits=(-12,-12))
 plt.ylabel(substance+' concentration [ppt]', fontsize=20)
 plt.xlabel('year', fontsize=20)
 plt.tick_params(labelsize=15)
-plt.legend(fontsize=12)
+plt.legend(fontsize=16)
 plt.grid(axis='y',alpha=.3)
-plt.savefig('Figures/Concentration__Euler_and_RK4_comparison.png')
+#plt.savefig('Figures/Concentration__Euler_and_RK4_comparison.png')
 plt.show()
 
 
 
 
-P_monthly=inverseonebox(k,O_df[substance]/(10**12),dt/12,MW)
+P_monthly=inverseonebox(k,O_df[substance]/(10**12),dt/12,MW)*1000
 
 P_yearly=np.zeros(int(len(P_monthly)/12)+1)
 P_ymax=np.zeros(int(len(P_monthly)/12)+1)
@@ -120,15 +120,15 @@ pd.DataFrame(data={'P_yearly': P_yearly, 'P_ymax': P_ymax, 'P_ymin': P_ymin, 'ye
 
 #Emissions
 plt.figure(figsize=[15,10])
-plt.title(substance+' emissions: Inverse model comparison', fontsize=20)
-plt.plot(timebar, P, label='WMO emissions')
+#plt.title(substance+' emissions: Inverse model comparison', fontsize=20)
+plt.plot(timebar, P*1000, label='WMO emissions')
 #plt.plot(O_df['time'][:-1],inverseonebox(k,O_df[substance]/(10**12),dt/12,MW))
 plt.plot(np.linspace(1978,2017,40),P_yearly,label='Inverse onebox model',color='C1')
 plt.fill_between(np.linspace(1978,2017,40),P_ymin,P_ymax,alpha=0.2,color='C1',label='Lifetime uncertainties')
-plt.ylabel(substance+' emissions [Mt/yr]', fontsize=20)
+plt.ylabel(substance+' emissions [kt/yr]', fontsize=20)
 plt.xlabel('year', fontsize=20)
 plt.tick_params(labelsize=15)
-plt.legend(fontsize=12)
+plt.legend(fontsize=16)
 plt.grid(axis='y',alpha=.3)
-plt.savefig('Figures/Emissions__Inverse_model_comparison.png')
+#plt.savefig('Figures/Emissions__Inverse_model_comparison.png')
 plt.show()
