@@ -8,21 +8,21 @@ The repository includes three maps: (1) Code, (2) Presentation and (3) TaskDescr
 
 This map contains all python (.py) files. The complete list:
   
-  1 bottomup                              :   The bottom-up model. Produces plots of CFC-11 emissions and banksize from 1931 to 2008. 
+    1 bottomup                              :   The bottom-up model. Produces plots of CFC-11 emissions and banksize from 1931 to 2008. 
   
-  2 bottomup_emissionrange                :   Bottom-up model for different CFC-11 bank sensitivities. Produces plots of emissions from 1931 to 2018. Plots are compared with plot from 'inversemodel.py'
+    2 bottomup_emissionrange                :   Bottom-up model for different CFC-11 bank sensitivities. Produces plots of emissions from 1931 to 2018. Plots are compared with plot from 'inversemodel.py'
   
-  3 globalproduction_cfc11_dataframe      :   Produces CFC-11 Combined_Cummulative_Production.xls using production data from AFEAS, UNEP and unreported Russian Emissions
+    3 globalproduction_cfc11_dataframe      :   Produces CFC-11 Combined_Cummulative_Production.xls using production data from AFEAS, UNEP and unreported Russian Emissions
   
-  4 inversemodel                          :   Models emissions from observed concentrations (Euler forward numerical scheme) 
+    4 inversemodel                          :   Models emissions from observed concentrations (Euler forward numerical scheme) 
   
-  5 lovelock                              :   Produces plots of different substances using oneboxmodel.py and twoboxmodel.py to evaluate model performance. 
+    5 lovelock                              :   Produces plots of different substances using oneboxmodel.py and twoboxmodel.py to evaluate model performance. 
   
-  6 oneboxmodel                           :   Models substance concentration using one box using RK4 and Euler forward numerical schemes. 
+    6 oneboxmodel                           :   Models substance concentration using one box using RK4 and Euler forward numerical schemes. 
   
-  7 realemissions                         :   Produces plots of substance concentration and emissions from real emission data. oneboxmodel.py, twoboxmodel.py and inversemodel used as numerical model. 
+    7 realemissions                         :   Produces plots of substance concentration and emissions from real emission data. oneboxmodel.py, twoboxmodel.py and inversemodel used as numerical model. 
   
-  8 twoboxmodel                           :   Models substance concentration using two boxes and Euler forward numerical schemes.
+    8 twoboxmodel                           :   Models substance concentration using two boxes and Euler forward numerical schemes.
 
   
   Code contains two submaps: (1.1) Data and (1.2) Figures:
