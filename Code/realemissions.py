@@ -14,37 +14,39 @@ from oneboxmodel import oneboxeulerfw, oneboxRK4
 from twoboxmodel import twoboxeulerfw
 from inversemodel import inverseonebox
 
+'''Read in WMO derived emissions'''
 P_WMO2014_df=pd.read_excel('Data/emissions_2014.xlsx')
 P_WMO2018_df=pd.read_excel('Data/agage_emissions.xlsx')
-substance_df = pd.DataFrame({'CH3CCl3': [1/5, 133.4,'.3'], 'CFC-11': [1/52, 137.37,''], 'CFC-12': [1/100, 120.91,'.1']})
 
-substance='CFC-11'#choose 'CH3CCl3', 'CFC-11' or 'CFC-12'
-substanceunits = substance+' (Gg/yr)'
+'''Substance specific information'''
+substance_df = pd.DataFrame({'CH3CCl3': [1/5, 133.4,'.3'], 'CFC-11': [1/52, 137.37,''], 'CFC-12': [1/100, 120.91,'.1']}) # define substance specific lifetime, molar weight and stringcode
+substance='CFC-11'                       # choose 'CH3CCl3', 'CFC-11' or 'CFC-12'
+substanceunits = substance+' (Gg/yr)'    # string to select correct data
 
-P_WMO2014=P_WMO2014_df[substanceunits] #select data from dataframe
-P_WMO2014=P_WMO2014.to_numpy()/1000000 #emissions in MT/year
-P_WMO2018=P_WMO2018_df[substanceunits] #select data from dataframe
-P_WMO2018=P_WMO2018.to_numpy()/1000 #emissions in MT/year
-P_data=np.concatenate((P_WMO2014[:29],P_WMO2018[1:])) #create one emissions dataset from 1950 to 2016
+'''Create complete emission dataset'''
+P_WMO2014=P_WMO2014_df[substanceunits]   # select data from dataframe
+P_WMO2014=P_WMO2014.to_numpy()/1000000   # emissions in MT/year
+P_WMO2018=P_WMO2018_df[substanceunits]   # select data from dataframe
+P_WMO2018=P_WMO2018.to_numpy()/1000      # emissions in MT/year
+P_data=np.concatenate((P_WMO2014[:29],P_WMO2018[1:])) # create one emissions dataset from 1950 to 2016
 
-
-#inputvariables boxmodels (k,ke,P,C0,C0N,C0S,dt,MW)
-k=substance_df.iloc[0][substance] #reaction constants: '1/5' or '1/52'
-ke=0.5 # interhemispheric exchange constant
-P=P_data #emissions data: choose 'P_constant' or 'P_data'
-C0=0 #start concentration onebox model (ppv)
-C0N=30*10**-12 #NH start concentration twobox model (ppv)
-C0S=10*10**-12 #SH start concentration twobox model (ppv)
-MW=substance_df.iloc[1][substance] #Molar Weight: 'CH3CCl3: 133.4 gr/mole' or 'CFC-11: 137.37 gr/mole'
-dt=1 #timestep (years)
+'''inputvariables boxmodels (k,ke,P,C0,C0N,C0S,dt,MW)'''
+k=substance_df.iloc[0][substance]        # reaction constants: 1/lifetime
+ke=0.5                                   # interhemispheric exchange constant
+P=P_data                                 # emissions data: choose 'P_constant' or 'P_data'
+C0=0                                     # start concentration onebox model (ppv)
+C0N=30*10**-12                           # NH start concentration twobox model (ppv)
+C0S=10*10**-12                           # SH start concentration twobox model (ppv)
+MW=substance_df.iloc[1][substance]       # Molar Weight
+dt=1                                     # timestep (years)
 
 #time array
 timebar=np.insert(np.concatenate((P_WMO2014_df['time'].to_numpy()[:28],P_WMO2018_df['time'].to_numpy()[1:])), 0, 1949)
 
-#Observations
+'''Read in AGAGE observations'''
 O_df = pd.read_csv('Data/global_mean_md.txt',header=14,delim_whitespace=True)
 
-#ERRORBARS:
+'''Create error range with emission errors propagating in one-box model'''
 Errormax=(P_WMO2018_df[substanceunits]+P_WMO2018_df['Uncertainties ' + substanceunits]).to_numpy()/1000
 Errormax=np.concatenate((P_WMO2014[:29],Errormax[1:]))
 Errormin=(P_WMO2018_df[substanceunits]-P_WMO2018_df['Uncertainties ' + substanceunits]).to_numpy()/1000
@@ -52,10 +54,11 @@ Errormin=np.concatenate((P_WMO2014[:29],Errormin[1:]))
 Errormax=oneboxRK4(k,Errormax,C0,dt,MW)*1.06
 Errormin=oneboxRK4(k,Errormin,C0,dt,MW)*1.06
 
+'''Read in error range from AGAGE observations'''
 ObsErrormax = O_df[substance]+O_df['---'+substance_df.iloc[2][substance]]
 ObsErrormin = O_df[substance]-O_df['---'+substance_df.iloc[2][substance]]
 
-#Inverse ERRORBARS
+'''Create error range based on lifetime uncertainties'''
 Invmax = inverseonebox(1/67,O_df[substance]/(10**12),dt/12,MW)*1000
 Invmin = inverseonebox(1/43,O_df[substance]/(10**12),dt/12,MW)*1000
 
@@ -67,7 +70,6 @@ plt.plot(timebar, oneboxRK4(k,P,C0,dt,MW)*1.06*(10**12),label='RK4 model', color
 plt.fill_between(timebar, Errormax*(10**12), Errormin*(10**12), alpha=0.2,label='Uncertainty range')
 plt.plot(O_df['time'],O_df[substance],label='AGAGE observations',color='C1')
 plt.fill_between(O_df['time'],ObsErrormax,ObsErrormin,alpha=0.3 ,color='C1')
-#plt.ticklabel_format(axis='y', scilimits=(-12,-12))
 plt.ylabel(substance+' concentration [ppt]', fontsize=20)
 plt.xlabel('year', fontsize=20)
 plt.tick_params(labelsize=15)
@@ -83,7 +85,6 @@ plt.figure(figsize=[15,10])
 plt.plot(timebar, oneboxeulerfw(k,P,C0,dt,MW)*1.06*(10**12),label='Euler model', color='C3')
 plt.plot(timebar, oneboxRK4(k,P,C0,dt,MW)*1.06*(10**12),label='RK4 model', color='C0')
 plt.plot(O_df['time'],O_df[substance],label='AGAGE observations', color='C1')
-#plt.ticklabel_format(axis='y', scilimits=(-12,-12))
 plt.ylabel(substance+' concentration [ppt]', fontsize=20)
 plt.xlabel('year', fontsize=20)
 plt.tick_params(labelsize=15)
@@ -94,7 +95,7 @@ plt.show()
 
 
 
-
+# Convert monthly derived emissions from AGAGE data into yearly emissions
 P_monthly=inverseonebox(k,O_df[substance]/(10**12),dt/12,MW)*1000
 
 P_yearly=np.zeros(int(len(P_monthly)/12)+1)
@@ -113,16 +114,15 @@ for i in range(int(len(P_monthly)/12+1)):
         P_yearly[i]=(np.mean(P_monthly[((i-1)*12+5):((i-1)*12+17)]))
         P_ymax[i]=(np.mean(Invmax[((i-1)*12+5):((i-1)*12+17)]))
         P_ymin[i]=(np.mean(Invmin[((i-1)*12+5):((i-1)*12+17)]))
-#Safe inverse model in dataframe
+#Save inverse model in dataframe
 pd.DataFrame(data={'P_yearly': P_yearly, 'P_ymax': P_ymax, 'P_ymin': P_ymin, 'year': np.linspace(1978,2017,40)}).to_excel('Data/Yearly_Emissions_InverseModel.xls')        
 
     
 
-#Emissions
+#Emissions WMO vs. one-box model
 plt.figure(figsize=[15,10])
 #plt.title(substance+' emissions: Inverse model comparison', fontsize=20)
 plt.plot(timebar, P*1000, label='WMO emissions')
-#plt.plot(O_df['time'][:-1],inverseonebox(k,O_df[substance]/(10**12),dt/12,MW))
 plt.plot(np.linspace(1978,2017,40),P_yearly,label='Inverse onebox model',color='C1')
 plt.fill_between(np.linspace(1978,2017,40),P_ymin,P_ymax,alpha=0.2,color='C1',label='Lifetime uncertainties')
 plt.ylabel(substance+' emissions [kt/yr]', fontsize=20)
