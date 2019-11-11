@@ -12,13 +12,11 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
+'''Read in combined production dataset'''
 cummulatief_df = pd.read_excel('Data/Cummulative_emissions.xls')
 cum_df=cummulatief_df
 
-
-
-
-### Emission rates ###
+''' Emission rates '''
 rPnD = 0.015 #Production & Distribution
 riRAC = 0.050 #Refrigeration and Air Conditioning Installation
 riClosed = 0.300 #Closed Foams Installation
@@ -27,14 +25,12 @@ rRAC = 0.050 #Refrigeration and Air Conditioning Banks
 rClosed = 0.080 #Closed Foams Banks
 rOpen = 0.980 #Open Foams and Emissive Uses Banks
 
-### Cumulative sales ###
-
+''' Cumulative sales '''
 RAC = np.copy(cum_df['R/AC_cum'].to_numpy())
 Closed = np.copy(cum_df['Closed_cum'].to_numpy())
 Open = np.copy(cum_df['Open_cum'].to_numpy())
 
-
-### Production and Distribution Emissions ###
+''' Production and Distribution Emissions '''
 ERAC1 = [RAC[0]*rPnD]
 EClosed1 = [Closed[0]*rPnD]
 EOpen1 = [Open[0]*rPnD]
@@ -49,7 +45,7 @@ RAC[-1] = RAC[-1] - sum(ERAC1)
 Closed[-1] = Closed[-1] - sum(EClosed1)
 Open[-1] = Open[-1] - sum(EOpen1)
 
-### Installation ###
+''' Installation '''
 ERAC2 = [RAC[0]*riRAC]
 EClosed2 = [Closed[0]*riClosed]
 EOpen2 = [Open[0]*riOpen]
@@ -64,7 +60,7 @@ RAC[-1] = RAC[-1] - sum(ERAC2)
 Closed[-1] = Closed[-1] - sum(EClosed2)
 Open[-1] = Open[-1] - sum(EOpen2)
 
-### Banks release ###
+''' Banks release '''
 ERAC3 = []
 EClosed3 = []
 EOpen3 = []
@@ -76,8 +72,8 @@ for i in range(len(RAC)):
         RAC[i+1] = RAC[i+1] - sum(ERAC3[:i+1])
         Closed[i+1] = Closed[i+1] - sum(EClosed3[:i+1])
         Open[i+1] = Open[i+1] - sum(EOpen3[:i+1])
-#%%
-### Total Emissions ###
+
+''' Total Emissions '''
 colors = [(0.1,0.6,0.1,0.3),(0.1,0.6,0.1,0.6),(0.1,0.6,0.1,0.95),(0.5,0.1,0.5,0.3),(0.5,0.1,0.5,0.6),(0.5,0.1,0.5,0.95),(0.9,0.5,0.02,0.3),(0.9,0.5,0.02,0.6),(0.9,0.5,0.02,0.95)]
 labels = ['R/AC production','R/AC installation','R/AC bank','Closed foam production','Closed foam installation','Closed foam bank','Open foam production','Open foam installation','Open foam bank']
 f1 = plt.figure(1,figsize=[15,10])

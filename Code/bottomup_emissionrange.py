@@ -10,21 +10,21 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-#load emmision data from WMO, AFEAS, Combined Cummulative Production, and Inverse emissions
+'''load emmision data from WMO, AFEAS, Combined Cummulative Production, and Inverse emissions'''
 P_WMO2014_df=pd.read_excel('Data/emissions_2014.xlsx')
 P_WMO2018_df=pd.read_excel('Data/agage_emissions.xlsx')
 Comb_Em_df = pd.read_excel('Data/Combined_Cummulative_Production.xls',index_col=[0], parse_dates=True)
 AFEAS_df = pd.read_excel('Data/em_cfc_11.xls')
 Inv_em_df = pd.read_excel('Data/Yearly_Emissions_InverseModel.xls')*1000
 
-#create combined WMO dataset
-P_WMO2014=P_WMO2014_df['CFC-11 (Gg/yr)'] #select data from dataframe
-P_WMO2014=P_WMO2014.to_numpy()/1000000 #emissions in MT/year
-P_WMO2018=P_WMO2018_df['CFC-11 (Gg/yr)'] #select data from dataframe
-P_WMO2018=P_WMO2018.to_numpy()/1000 #emissions in MT/year
-P_WMO_data=np.concatenate((P_WMO2014[:29],P_WMO2018[1:])) #create one emissions dataset from 1950 to 2016
+'''create combined WMO dataset'''
+P_WMO2014=P_WMO2014_df['CFC-11 (Gg/yr)']                  # select data from dataframe
+P_WMO2014=P_WMO2014.to_numpy()/1000000                    # emissions in MT/year
+P_WMO2018=P_WMO2018_df['CFC-11 (Gg/yr)']                  # select data from dataframe
+P_WMO2018=P_WMO2018.to_numpy()/1000                       # emissions in MT/year
+P_WMO_data=np.concatenate((P_WMO2014[:29],P_WMO2018[1:])) # create one emissions dataset from 1950 to 2016
 
-##### Extend dataset untill 2018 assuming no sales ############
+'''Extend dataset until 2018 assuming no sales'''
 zeros=pd.DataFrame(np.zeros((10, 4)), columns=Comb_Em_df.columns)
 Comb_Em_df=pd.DataFrame(np.concatenate((Comb_Em_df, zeros)), columns=Comb_Em_df.columns)
 Comb_Em_df['year'][78:88]=np.arange(2009,2019,1)
@@ -33,8 +33,7 @@ Comb_Em_df['Closed_cum'][78:88]=Comb_Em_df['Closed_cum'][77]
 Comb_Em_df['Open_cum'][78:88]=Comb_Em_df['Open_cum'][77]
 
 
-#choose bank emission scenario 
-
+'''Calculate bottom-up emissions and bank size as a function of bank emission rates''' 
 def bottumup(rRAC, rClosed, rOpen, Extra):
 
     ### Emission rates ###
@@ -102,30 +101,23 @@ def bottumup(rRAC, rClosed, rOpen, Extra):
     emissions = np.asarray(ERAC1) + np.asarray(ERAC2) + np.asarray(ERAC3) + np.asarray(EClosed1) + np.asarray(EClosed2) + np.asarray(EClosed3) + np.asarray(EOpen1) + np.asarray(EOpen2) + np.asarray(EOpen3)
     
     return emissions
-    
-#%%
+'''
+PICK From RANGE:
+rRAC = 0.02 -- 0.10 #Refrigeration and Air Conditioning Banks
+rClosed = 0.04 -- 0.10 #Closed Foams Banks
+rOpen = 0.70 -- 0.98 #Open Foams and Emissive Uses Banks
+'''
 
-#PICK From RANGE:
-#rRAC = 0.02 -- 0.10 #Refrigeration and Air Conditioning Banks
-#rClosed = 0.04 -- 0.10 #Closed Foams Banks
-#rOpen = 0.70 -- 0.98 #Open Foams and Emissive Uses Banks
+'''choose bank emission scenario'''
+path1=bottumup(0.05, 0.08, 0.98, False)     # Most likely
+path2=bottumup(0.1, 0.1, 0.98, False)       # Quick release
+path3=bottumup(0.02, 0.04, 0.7, False)      # Slow release
 
-
-
-path1=bottumup(0.05, 0.08, 0.98, False)
-path2=bottumup(0.1, 0.1, 0.98, False)
-path3=bottumup(0.02, 0.04, 0.7, False)
-
-extra_foam=bottumup(0.05, 0.08, 0.98, True)
-
-
-
-
+extra_foam=bottumup(0.05, 0.08, 0.98, True) # Emission rates for extra production
 
 
 #time array
 timebar=np.insert(np.concatenate((P_WMO2014_df['time'].to_numpy()[:28],P_WMO2018_df['time'].to_numpy()[1:])), 0, 1949)
-
 
 #Emissions
 plt.figure(figsize=[15,10])
