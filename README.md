@@ -47,7 +47,26 @@ This map contains all python (.py) files. The complete list:
       
   1.2) Figures:
  
-  Here all figures produced by all python (.py) files are stored.
+  Here all figures produced by all python (.py) files are stored:     
+        
+      1 Bottemup_banksize
+      2 Bottemup_emissions
+      3 Bottemup_emissions_range_bank_sensitivity
+      4 Concentration_Euler_and_RK4_comparison
+      5 Concentration_RK4_and_observations_comparison
+      6 Emissions_Inverse_model_comparison
+      7 Emissions_AFEAS_WMO_inverse_and_bottemup
+      8 Increased_Closed_Cell_Foam_Production
+      9 LoveLock_Concentration_Euler_and_RK4_comparison
+      10  Lovelock_concentration_twoboxmodel
+      11  Lovelock_concentration_twoboxmodel_ceased_emissions
+      12  Lovelock_concentration_twoboxmodel_varying_lifetime
+      13  LoveLock_logConcentration_Euler_and_RK4_comparison
+      14  Lovelock_logconcentration_twoboxmodel
+      15  Lovelock_logconcentration_twoboxmodel_ceased_emissions
+      16  Lovelock_logconcentration_twoboxmodel_varying_lifetime
+      17  Lovelock_original
+      
   
 2) Presentation: Contains PDF PowerPoint(.pptx) file of CFC-11 detective study
 
