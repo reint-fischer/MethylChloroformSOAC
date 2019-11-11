@@ -15,7 +15,7 @@ P_WMO2014_df=pd.read_excel('Data/emissions_2014.xlsx')
 P_WMO2018_df=pd.read_excel('Data/agage_emissions.xlsx')
 Comb_Em_df = pd.read_excel('Data/Combined_Cummulative_Production.xls',index_col=[0], parse_dates=True)
 AFEAS_df = pd.read_excel('Data/em_cfc_11.xls')
-Inv_em_df = pd.read_excel('Data/Yearly_Emissions_InverseModel.xls')*1000
+Inv_em_df = pd.read_excel('Data/Yearly_Emissions_InverseModel.xls')
 
 #create combined WMO dataset
 P_WMO2014=P_WMO2014_df['CFC-11 (Gg/yr)'] #select data from dataframe
@@ -130,33 +130,33 @@ timebar=np.insert(np.concatenate((P_WMO2014_df['time'].to_numpy()[:28],P_WMO2018
 
 #Emissions
 plt.figure(figsize=[15,10])
-plt.title('Bottom-up CFC-11 emissions range: Bank sensitivity', fontsize=20)
+#plt.title('Bottom-up CFC-11 emissions range: Bank sensitivity', fontsize=20)
 plt.plot(Comb_Em_df['year'],path1, label='Sensitivity - most likely', color='C2')
 plt.plot(Comb_Em_df['year'],path2, label='Sensitivity - High', color='C3')
 plt.plot(Comb_Em_df['year'],path3, label='Sensitivity - Low', color='C0')
 plt.plot(np.linspace(1978,2017,40),Inv_em_df['P_yearly'],label='Inverse onebox model', color='C1')
 plt.fill_between(np.linspace(1978,2017,40),Inv_em_df['P_ymin'],Inv_em_df['P_ymax'],alpha=0.3,color='C1',label='Lifetime uncertainties')
-plt.ylabel('CFC-11 emissions [Mt/yr]', fontsize=15)
+plt.ylabel('CFC-11 emissions [kt/yr]', fontsize=15)
 plt.xlabel('year', fontsize=15)
 plt.tick_params(labelsize=15)
 plt.grid(axis='y',alpha=.3)
-plt.legend(fontsize=12)
+plt.legend(fontsize=16)
 #plt.savefig('Figures/Bottemup_emissions_range_bank_sensitivity.png')
 plt.show()
 
 #Emission comparison WMO, AFEAS, bottomup, Inverse
 plt.figure(figsize=[15,10])
-plt.title('Bottom-up CFC-11 emissions: Bottem-up vs Top-down', fontsize=20)
+#plt.title('Bottom-up CFC-11 emissions: Bottom-up vs Top-down', fontsize=20)
 plt.plot(timebar, P_WMO_data*1000, label='Top-down: WMO emissions')
 plt.plot(np.linspace(1978,2017,40),Inv_em_df['P_yearly'],label='Top-down: Inverse onebox model', color='C1')
-plt.plot(Comb_Em_df['year'],path1, label='Bottem-up: most likely', color='C2')
-plt.plot(AFEAS_df['year'], AFEAS_df['R_annual'], label='Bottem-up: AFEAS', color='C3')
+plt.plot(Comb_Em_df['year'],path1, label='Bottom-up: most likely', color='C2')
+plt.plot(AFEAS_df['year'], AFEAS_df['R_annual'], label='Bottom-up: AFEAS', color='C3')
 plt.fill_between(np.linspace(1978,2017,40),Inv_em_df['P_ymin'],Inv_em_df['P_ymax'],alpha=0.3,color='C1',label='Lifetime uncertainties')
-plt.ylabel('CFC-11 emissions [Mt/yr]', fontsize=15)
+plt.ylabel('CFC-11 emissions [kt/yr]', fontsize=15)
 plt.xlabel('year', fontsize=15)
 plt.tick_params(labelsize=15)
 plt.grid(axis='y',alpha=.3)
-plt.legend(fontsize=12)
+plt.legend(fontsize=16)
 #plt.savefig('Figures/Emissions_AFEAS_WMO_inverse_and_bottemup.png')
 plt.show()
 
@@ -166,17 +166,17 @@ extra_f[8:]=extra_f[8:]+35
 
 
 plt.figure(figsize=[15,10])
-plt.title('Increased Closed-Cell Foam Production', fontsize=20)
-plt.plot(Comb_Em_df['year'],extra_foam, label='Bottem-up: most likely', color='C2')
+#plt.title('Increased Closed-Cell Foam Production', fontsize=20)
+plt.plot(Comb_Em_df['year'],extra_foam, label='Bottom-up: most likely', color='C2')
 plt.plot(np.linspace(1978,2017,40),Inv_em_df['P_yearly'],label='Inverse onebox model', color='C1')
 plt.fill_between(np.linspace(1978,2017,40),Inv_em_df['P_ymin'],Inv_em_df['P_ymax'],alpha=0.3,color='C1',label='Lifetime uncertainties')
 plt.bar(np.linspace(2002,2017,15), extra_f , width=1,alpha=0.3,color='C3',label='Extra Production Closed Foam')
-plt.ylabel('CFC-11 emissions [Mt/yr]', fontsize=15)
+plt.ylabel('CFC-11 emissions [kt/yr]', fontsize=15)
 plt.xlabel('year', fontsize=15)
 plt.tick_params(labelsize=15)
 plt.grid(axis='y',alpha=.3)
-plt.legend(fontsize=12)
-plt.savefig('Figures/Increased_Closed_Cell_Foam_Production.png')
+plt.legend(fontsize=16)
+#plt.savefig('Figures/Increased_Closed_Cell_Foam_Production.png')
 plt.show()
 
 
